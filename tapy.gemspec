@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Carlos Atkinson"]
   spec.email         = ["carlos.atkinson@vagas.com.br"]
 
-  spec.summary       = %q{Tapy let's you easly use and build generators}
+  spec.summary       = %q{Tapy is the easy to build, easy to use scaffolding tool}
   #spec.description   = %q{TODO: Write a longer description or delete this line.}
   #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"

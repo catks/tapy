@@ -25,16 +25,18 @@ module Tapy
     end
 
     def render(args: {}, to: '.')
-      files_to_render = Dir[recipe_path.join('*')].reject { |file| FILES_TO_IGNORE.include?(file) }
+      files_to_render = Dir[recipe_path.join('*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
 
       files_to_render.each do |filepath|
         file = Pathname.new(filepath)
         file_raw_content = file.read
+
         template = Liquid::Template.parse(file_raw_content)
         file_rendered_content = template.render(args)
 
-        # TODO: Consider relative path and subfolders to create the same structure
-        IO.write(file.basename.to_s, file_rendered_content)
+        relative_path = Pathname.new(file.to_s.split("#{git_repo.folder_name}/").last).expand_path
+        relative_path.dirname.mkpath
+        relative_path.write(file_rendered_content)
       end
     end
 

@@ -22,6 +22,14 @@ module Tapy
       end
     end
 
+    class Update < Dry::CLI::Command
+      desc 'Update all Tapy recipes'
+
+      def call(recipe_reference:)
+        recipe = Tapy::Recipe.update_all
+      end
+    end
+
     class Generate < Dry::CLI::Command
       desc 'Generate files folowwing a Tapy recipe'
 
@@ -42,6 +50,6 @@ module Tapy
 
     register '--version', Version, aliases: ['-v']
     register 'generate', Generate, aliases: ['g']
-    register 'install', Generate
+    register 'install', Install
   end
 end

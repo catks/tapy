@@ -1,6 +1,6 @@
 module Tapy
   module ArgOptions
-    OPTION_REGEXP = /([[[:alnum:]]_-]+):([[[:alnum:]]_-]+)/.freeze
+    OPTION_REGEXP = /([[[:alnum:]]_-]+):([[[:alnum:]]_.-]+)/.freeze
 
     def self.parse(arg_string)
       args = arg_string.split
