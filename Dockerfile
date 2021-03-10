@@ -10,7 +10,6 @@ RUN apk update \
     build-base \
     postgresql-dev \
     postgresql-client \
-
     && rm -rf /var/cache/apk/*
 
 WORKDIR /usr/src/app

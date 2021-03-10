@@ -25,10 +25,13 @@ module Tapy
     end
 
     def render(args: {}, to: '.')
-      files_to_render = Dir[recipe_path.join('*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
+      files_to_render = Dir[recipe_path.join('**/*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
 
       files_to_render.each do |filepath|
         file = Pathname.new(filepath)
+
+        next if file.directory?
+
         file_raw_content = file.read
 
         template = Liquid::Template.parse(file_raw_content)
