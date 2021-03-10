@@ -1,7 +1,7 @@
 RSpec.describe Tapy::Recipe do
-  let(:instance) { described_class.new(git_reference) }
+  let(:instance) { described_class.new(git_reference, recipes_path: 'tmp/recipes') }
 
-  let(:git_reference) { 'catks/docker-ruby' }
+  let(:git_reference) { 'test/docker-ruby' }
 
   describe '.install' do
     subject(:install) { instance.install }
@@ -12,4 +12,6 @@ RSpec.describe Tapy::Recipe do
       end
     end
   end
+
+  # TODO: Add more tests
 end

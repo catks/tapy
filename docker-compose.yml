@@ -1,0 +1,25 @@
+version: "3.9"
+
+volumes:
+  bundle:
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    entrypoint: 'sh docker-entrypoint.sh'
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - gitserver
+    volumes:
+      - .:/usr/src/app
+      - bundle:/bundle
+
+  gitserver:
+    image: catks/gitserver-http:0.1.0
+    volumes:
+      - ./docker/git_server/repos/:/var/lib/initial/
