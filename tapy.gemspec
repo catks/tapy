@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'liquid', '~> 5.0.0'
   spec.add_dependency 'vorx', '~> 0.1.1'
+  spec.add_dependency 'dry-events', '~> 0.2.0'
 end

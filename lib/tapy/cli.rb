@@ -16,9 +16,15 @@ module Tapy
       argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
 
       def call(recipe_reference:)
+        # TODO: refactor to a publish method, eg publish('recipe.start', recipe: recipe)
+        Tapy.events.publish('recipes.start', recipe: recipe)
         recipe = Tapy::Recipe.new(recipe_reference)
 
+        Tapy.events.publish('recipes.installing', recipe: recipe)
+
         recipe.install
+
+        Tapy.events.publish('recipes.installed', recipe: recipe)
       end
     end
 
@@ -26,6 +32,7 @@ module Tapy
       desc 'Update all Tapy recipes'
 
       def call(recipe_reference:)
+
         recipe = Tapy::Recipe.update_all
       end
     end
@@ -40,7 +47,14 @@ module Tapy
       def call(recipe_reference:, recipe_options: [], **options)
         recipe = Tapy::Recipe.new(recipe_reference)
 
-        recipe.install unless recipe.exist?
+        Tapy.events.publish('recipes.starting', recipe: recipe)
+
+        unless recipe.exist?
+          Tapy.events.publish('recipes.missing', recipe: recipe)
+          Tapy.events.publish('recipes.installing', recipe: recipe)
+          recipe.install
+          Tapy.events.publish('recipes.installed', recipe: recipe)
+        end
 
         recipe_args = Tapy::ArgOptions.parse(recipe_options.join(' '))
 

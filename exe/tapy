@@ -8,6 +8,6 @@ require_relative '../lib/tapy'
 begin
   Dry::CLI.new(Tapy::CLI).call
 rescue Tapy::Recipe::InstallError => e
-  error_name = e.class.name.split('::').last
-  abort("[#{error_name}] #{e.message}")
+  Tapy.events.publish('tapy.error', error: e)
+  abort
 end
