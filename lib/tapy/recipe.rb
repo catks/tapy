@@ -3,6 +3,8 @@ require 'pathname'
 
 module Tapy
   class Recipe
+    include Tapy::Utils::PublishHelper
+
     FILES_TO_IGNORE = %w[.gitignore .git README.md LICENSE].freeze
     InstallError = Class.new(StandardError)
 
@@ -46,12 +48,12 @@ module Tapy
 
         relative_path = Pathname.new(to).join(file.to_s.split("#{git_repo.folder_name}/").last).expand_path
 
-        publish('recipes.rendering', file: file)
+        publish('recipes.rendering', recipe: self, file: file)
 
         relative_path.dirname.mkpath
         relative_path.write(file_rendered_content)
 
-        publish('recipes.rendered', file: file, install_path: relative_path)
+        publish('recipes.rendered', recipe: self, file: file, install_path: relative_path)
       end
     end
 
@@ -64,10 +66,6 @@ module Tapy
 
     def git_repo
       @git_repo ||= @store.find(@git_reference)
-    end
-
-    def publish(event, **options)
-      @events.publish(event, recipe: self, **options)
     end
   end
 end

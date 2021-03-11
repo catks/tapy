@@ -2,7 +2,11 @@ module Tapy
   module CLI
     extend Dry::CLI::Registry
 
-    class Version < Dry::CLI::Command
+    class Base < Dry::CLI::Command
+      include Tapy::Utils::PublishHelper
+    end
+
+    class Version < Base
       desc 'Prints Tapy Version'
 
       def call(*)
@@ -10,25 +14,24 @@ module Tapy
       end
     end
 
-    class Install < Dry::CLI::Command
+    class Install < Base
       desc 'Install a Tapy recipe'
 
       argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
 
       def call(recipe_reference:)
         # TODO: refactor to a publish method, eg publish('recipe.start', recipe: recipe)
-        Tapy.events.publish('recipes.start', recipe: recipe)
         recipe = Tapy::Recipe.new(recipe_reference)
 
-        Tapy.events.publish('recipes.installing', recipe: recipe)
+        publish('recipes.start', 'recipes.installing', recipe: recipe)
 
         recipe.install
 
-        Tapy.events.publish('recipes.installed', recipe: recipe)
+        publish('recipes.installed', recipe: recipe)
       end
     end
 
-    class Update < Dry::CLI::Command
+    class Update < Base
       desc 'Update all Tapy recipes'
 
       def call(recipe_reference:)
@@ -37,7 +40,7 @@ module Tapy
       end
     end
 
-    class Generate < Dry::CLI::Command
+    class Generate < Base
       desc 'Generate files folowwing a Tapy recipe'
 
       argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
@@ -47,13 +50,12 @@ module Tapy
       def call(recipe_reference:, recipe_options: [], **options)
         recipe = Tapy::Recipe.new(recipe_reference)
 
-        Tapy.events.publish('recipes.starting', recipe: recipe)
+        publish('recipes.starting', recipe: recipe)
 
         unless recipe.exist?
-          Tapy.events.publish('recipes.missing', recipe: recipe)
-          Tapy.events.publish('recipes.installing', recipe: recipe)
+          publish('recipes.missing', 'recipes.installing', recipe: recipe)
           recipe.install
-          Tapy.events.publish('recipes.installed', recipe: recipe)
+          publish('recipes.installed', recipe: recipe)
         end
 
         recipe_args = Tapy::ArgOptions.parse(recipe_options.join(' '))

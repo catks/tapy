@@ -4,6 +4,7 @@ require 'dry/events/publisher'
 
 require "tapy/version"
 require "tapy/arg_options"
+require "tapy/utils"
 require "tapy/recipe"
 require 'tapy/listeners/log_handler'
 
