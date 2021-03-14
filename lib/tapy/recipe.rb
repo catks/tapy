@@ -4,30 +4,37 @@ require 'pathname'
 module Tapy
   class Recipe
     include Tapy::Utils::PublishHelper
+    extend Tapy::Utils::PublishHelper
 
     FILES_TO_IGNORE = %w[.gitignore .git README.md LICENSE].freeze
-    InstallError = Class.new(StandardError)
+    DEFAULT_STORE = Tapy::RecipeStore.new('~/.tapy/recipes')
 
     attr_reader :git_reference
 
-    def initialize(git_reference, recipes_path: '~/.tapy/recipes', events: Tapy.events)
-      @recipes_path = Pathname.new(recipes_path).expand_path
+    def initialize(git_reference, store: DEFAULT_STORE)
       @git_reference = git_reference
-      @store = Vorx::Store.new(@recipes_path.to_s, store_file: 'recipe_store.yml', repository_prefix: 'tapy-')
-      @events = events
+      @store = store
+
+      publish('recipes.starting', recipe: self)
     end
 
     def install
-      @store.fetch(@git_reference)
+      publish('recipes.start', 'recipes.installing', recipe: self)
 
-      # TODO: Add better error handling in vorx and here
-    rescue StandardError => e
-      @store.delete(@git_reference)
+      @store.install(@git_reference)
 
-      raise InstallError, e.message
+      publish('recipes.installed', recipe: self)
     end
 
-    def exist?
+    def update
+      publish('recipes.updating', recipe: self)
+
+      @store.update(@git_reference)
+
+      publish('recipes.updated', recipe: self)
+    end
+
+    def installed?
       !!git_repo
     end
 
@@ -57,9 +64,8 @@ module Tapy
       end
     end
 
-    # TODO: Maybe rename to install_path
     def path
-      @path ||= @recipes_path.join(git_repo.folder_name)
+      @path ||= @store.recipes_path.join(git_repo.folder_name)
     end
 
     private

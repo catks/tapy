@@ -119,6 +119,7 @@ RSpec.describe 'tapy generate', type: :feature do
         ======== http://gitserver/tapy-no-ecziste.git ========
 
         \thttp://gitserver/tapy-no-ecziste.git is missing
+
         \tInstalling http://gitserver/tapy-no-ecziste.git
 
         \t[InstallError]

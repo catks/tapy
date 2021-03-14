@@ -14,7 +14,7 @@ module Tapy
       end
 
       def on_recipes_installing(event)
-        @stderr.puts "\tInstalling #{event[:recipe].git_reference}"
+        @stderr.puts "\n\tInstalling #{event[:recipe].git_reference}"
       end
 
       def on_recipes_installed(event)
