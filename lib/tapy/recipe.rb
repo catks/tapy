@@ -19,11 +19,21 @@ module Tapy
     end
 
     def install
-      publish('recipes.start', 'recipes.installing', recipe: self)
+      publish('recipes.installing', recipe: self)
 
       @store.install(@git_reference)
 
       publish('recipes.installed', recipe: self)
+    end
+
+    def uninstall
+      publish('recipes.uninstalling', recipe: self)
+
+      raise Tapy::UninstallError, "Recipe #{@git_reference} is not installed" unless installed?
+
+      @store.uninstall(@git_reference)
+
+      publish('recipes.uninstalled', recipe: self)
     end
 
     def update

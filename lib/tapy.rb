@@ -20,6 +20,8 @@ module Tapy
     register_event('recipes.missing')
     register_event('recipes.installing')
     register_event('recipes.installed')
+    register_event('recipes.uninstalling')
+    register_event('recipes.uninstalled')
     register_event('recipes.updating')
     register_event('recipes.updated')
     register_event('recipes.rendering')

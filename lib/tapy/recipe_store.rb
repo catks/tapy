@@ -24,6 +24,10 @@ module Tapy
       raise InstallError, e.message
     end
 
+    def uninstall(git_reference)
+      @store.delete(git_reference)
+    end
+
     def update(git_reference)
       @store.fetch(recipe)
     rescue StandardError => e

@@ -27,6 +27,18 @@ module Tapy
       end
     end
 
+    class Uninstall < Base
+      desc 'Install or Update a Tapy recipe'
+
+      argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
+
+      def call(recipe_reference:)
+        recipe = Tapy::Recipe.new(recipe_reference)
+
+        recipe.uninstall
+      end
+    end
+
     class Generate < Base
       desc 'Generate files folowwing a Tapy recipe'
 
@@ -52,5 +64,6 @@ module Tapy
     register '--version', Version, aliases: ['-v']
     register 'generate', Generate, aliases: ['g']
     register 'install', Install
+    register 'uninstall', Uninstall
   end
 end

@@ -21,6 +21,14 @@ module Tapy
         @stderr.puts "\tInstalled on #{event[:recipe].path}"
       end
 
+      def on_recipes_uninstalling(event)
+        @stderr.puts "\n\tUninstalling #{event[:recipe].git_reference}"
+      end
+
+      def on_recipes_uninstalled(event)
+        @stderr.puts "\tRecipe #{event[:recipe].git_reference} removed from#{event[:recipe].path}"
+      end
+
       def on_recipes_updating(event)
         @stderr.puts "\tUpdating recipe in #{event[:recipe].path}"
       end
