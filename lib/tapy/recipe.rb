@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'liquid'
 require 'pathname'
 
@@ -49,8 +51,6 @@ module Tapy
     end
 
     def render(args: {}, to: '.')
-      files_to_render = Dir[path.join('**/*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
-
       files_to_render.each do |filepath|
         file = Pathname.new(filepath)
 
@@ -58,19 +58,14 @@ module Tapy
 
         # TODO: Change event to recipes.file.rendering
 
-        file_raw_content = file.read
-
-        template = Liquid::Template.parse(file_raw_content)
-        file_rendered_content = template.render(args)
-
-        relative_path = Pathname.new(to).join(file.to_s.split("#{git_repo.folder_name}/").last).expand_path
+        file_rendered_content = render_file_content(file, args)
 
         publish('recipes.rendering', recipe: self, file: file)
 
-        relative_path.dirname.mkpath
-        relative_path.write(file_rendered_content)
+        install_path = relative_path_from_repo(file, base_path: to)
+        write_file(file_rendered_content, install_path: install_path)
 
-        publish('recipes.rendered', recipe: self, file: file, install_path: relative_path)
+        publish('recipes.rendered', recipe: self, file: file, install_path: install_path)
       end
     end
 
@@ -82,6 +77,25 @@ module Tapy
 
     def git_repo
       @git_repo ||= @store.find(@git_reference)
+    end
+
+    def files_to_render
+      @files_to_render = Dir[path.join('**/*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
+    end
+
+    def render_file_content(file, args)
+      file_raw_content = file.read
+      template = Liquid::Template.parse(file_raw_content)
+      template.render(args)
+    end
+
+    def write_file(file_content, install_path:)
+      install_path.dirname.mkpath
+      install_path.write(file_content)
+    end
+
+    def relative_path_from_repo(file, base_path: '.')
+      Pathname.new(base_path).join(file.to_s.split("#{git_repo.folder_name}/").last).expand_path
     end
   end
 end

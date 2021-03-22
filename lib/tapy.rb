@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 require 'vorx'
 require 'dry/cli'
 require 'dry/events/publisher'
 
-require "tapy/version"
-require "tapy/errors"
-require "tapy/arg_options"
-require "tapy/utils"
-require "tapy/recipe_store"
-require "tapy/recipe"
+require 'tapy/version'
+require 'tapy/errors'
+require 'tapy/arg_options'
+require 'tapy/utils'
+require 'tapy/recipe_store'
+require 'tapy/recipe'
 require 'tapy/listeners/log_handler'
-
 
 module Tapy
   class Events
@@ -35,4 +36,4 @@ end
 
 Tapy.events.subscribe(Tapy::Listeners::LogHandler.new)
 
-require "tapy/cli"
+require 'tapy/cli'

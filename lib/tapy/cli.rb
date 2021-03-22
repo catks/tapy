@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tapy
   module CLI
     extend Dry::CLI::Registry
@@ -17,7 +19,9 @@ module Tapy
     class Install < Base
       desc 'Install or Update a Tapy recipe'
 
-      argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
+      argument :recipe_reference,
+               type: :string, required: true,
+               desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
 
       def call(recipe_reference:)
         # TODO: refactor to a publish method, eg publish('recipe.start', recipe: recipe)
@@ -30,7 +34,9 @@ module Tapy
     class Uninstall < Base
       desc 'Install or Update a Tapy recipe'
 
-      argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
+      argument :recipe_reference,
+               type: :string, required: true,
+               desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
 
       def call(recipe_reference:)
         recipe = Tapy::Recipe.new(recipe_reference)
@@ -42,13 +48,15 @@ module Tapy
     class Generate < Base
       desc 'Generate files folowwing a Tapy recipe'
 
-      argument :recipe_reference, type: :string, required: true, desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
-      argument :recipe_options, type: :array, required: false, desc: "Optional recipe options"
-      option :to, type: :string, default: '.', desc: "Output folder"
+      argument :recipe_reference,
+               type: :string, required: true,
+               desc: 'Recipe, eg: `catks/docker`, `github:catks/docker` or `git@github.com:catks/tapy-docker.git`'
+
+      argument :recipe_options, type: :array, required: false, desc: 'Optional recipe options'
+      option :to, type: :string, default: '.', desc: 'Output folder'
 
       def call(recipe_reference:, recipe_options: [], **options)
         recipe = Tapy::Recipe.new(recipe_reference)
-
 
         unless recipe.installed?
           publish('recipes.missing', recipe: recipe)

@@ -8,7 +8,9 @@ RSpec.describe 'tapy install', type: :feature do
   # TODO: Use tmp folder
   let(:store) { Tapy::RecipeStore.new }
 
-  def recipe; Tapy::Recipe.new(git_reference); end
+  def recipe
+    Tapy::Recipe.new(git_reference)
+  end
 
   before do
     reload_tmp

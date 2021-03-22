@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tapy
   module Utils
     module PublishHelper

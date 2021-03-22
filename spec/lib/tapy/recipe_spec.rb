@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tapy::Recipe do
   let(:instance) { described_class.new(git_reference, store: store) }
   let(:store) { Tapy::RecipeStore.new('tmp/recipes') }
@@ -15,7 +17,7 @@ RSpec.describe Tapy::Recipe do
       it 'install the repository' do
         install
 
-        # TODO verify if installtion ocurred
+        # TODO: verify if installtion ocurred
       end
     end
 

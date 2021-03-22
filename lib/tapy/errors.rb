@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tapy
   Error = Class.new(StandardError)
   InstallError = Class.new(Error)

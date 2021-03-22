@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 require 'forwardable'
 
@@ -29,7 +31,7 @@ module Tapy
     end
 
     def update(git_reference)
-      @store.fetch(recipe)
+      @store.fetch(git_reference)
     rescue StandardError => e
       raise UpdateError, e.message
     end
