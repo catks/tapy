@@ -43,6 +43,9 @@ RSpec.describe 'tapy generate', type: :feature do
         \tRendering Dockerfile
         \tRendered in /usr/src/app/tmp/Dockerfile
 
+        \tRendering docker/other/.env
+        \tRendered in /usr/src/app/tmp/docker/other/.env
+
         \tRendering docker/other/Dockerfile
         \tRendered in /usr/src/app/tmp/docker/other/Dockerfile
       DESC
@@ -50,7 +53,7 @@ RSpec.describe 'tapy generate', type: :feature do
       expect(command_stderr).to eq(expected_stderr_output)
     end
 
-    it 'render subfolder file' do
+    it 'renders the subfolder file' do
       run_command('tapy generate http://gitserver/tapy-docker.git', path: 'tmp/')
 
       expected_rendered_file = <<~DESC
@@ -60,6 +63,16 @@ RSpec.describe 'tapy generate', type: :feature do
       DESC
 
       expect(File.read('tmp/docker/other/Dockerfile')).to eq(expected_rendered_file)
+    end
+
+    it 'renders a dot file' do
+      run_command('tapy generate http://gitserver/tapy-docker.git', path: 'tmp/')
+
+      expected_rendered_file = <<~DESC
+        MY_ENV=OPA
+      DESC
+
+      expect(File.read('tmp/docker/other/.env')).to eq(expected_rendered_file)
     end
 
     context 'with valid options' do

@@ -8,7 +8,7 @@ module Tapy
     include Tapy::Utils::PublishHelper
     extend Tapy::Utils::PublishHelper
 
-    FILES_TO_IGNORE = %w[.gitignore .git README.md LICENSE].freeze
+    FILES_TO_IGNORE = %w[.gitignore .git .git/**/* README.md LICENSE].freeze
     DEFAULT_STORE = Tapy::RecipeStore.new('~/.tapy/recipes')
 
     attr_reader :git_reference
@@ -80,7 +80,14 @@ module Tapy
     end
 
     def files_to_render
-      @files_to_render = Dir[path.join('**/*')].reject { |file| FILES_TO_IGNORE.include?(file.split('/').last) }
+      @files_to_render ||= begin
+                             all_files = Dir.glob(path.join('**/*'), File::FNM_DOTMATCH)
+                             files_to_ignore = Dir.glob((FILES_TO_IGNORE).map { |f| path.join(f) }, File::FNM_DOTMATCH)
+
+                             folders_references = ->(filepath) { filepath.match?(%r{\/\.$}) }
+
+                             (all_files - files_to_ignore).reject(&folders_references)
+                           end
     end
 
     def render_file_content(file, args)
