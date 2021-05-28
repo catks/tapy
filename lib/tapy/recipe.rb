@@ -81,13 +81,13 @@ module Tapy
 
     def files_to_render
       @files_to_render ||= begin
-                             all_files = Dir.glob(path.join('**/*'), File::FNM_DOTMATCH)
-                             files_to_ignore = Dir.glob((FILES_TO_IGNORE).map { |f| path.join(f) }, File::FNM_DOTMATCH)
+        all_files = Dir.glob(path.join('**/*'), File::FNM_DOTMATCH)
+        files_to_ignore = Dir.glob(FILES_TO_IGNORE.map { |f| path.join(f) }, File::FNM_DOTMATCH).sort
 
-                             folders_references = ->(filepath) { filepath.match?(%r{\/\.$}) }
+        folders_references = ->(filepath) { filepath.match?(%r{/\.$}) }
 
-                             (all_files - files_to_ignore).reject(&folders_references)
-                           end
+        (all_files - files_to_ignore).reject(&folders_references)
+      end
     end
 
     def render_file_content(file, args)
