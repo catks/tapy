@@ -50,7 +50,8 @@ RSpec.describe 'tapy generate', type: :feature do
         \tRendered in /usr/src/app/tmp/docker/other/Dockerfile
       DESC
 
-      expect(command_stderr).to eq(expected_stderr_output)
+      expect(AnyLineOrderString.new(command_stderr))
+        .to eq(expected_stderr_output)
     end
 
     it 'renders the subfolder file' do

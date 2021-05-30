@@ -5,6 +5,7 @@ require 'tapy'
 require 'byebug'
 
 require_relative 'support/helpers'
+require_relative 'support/any_line_order_string'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

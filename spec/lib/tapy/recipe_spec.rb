@@ -6,7 +6,7 @@ RSpec.describe Tapy::Recipe do
 
   let(:git_reference) { 'http://gitserver/tapy-no-eczist.git' }
 
-  describe '.install' do
+  describe '#install' do
     subject(:install) { instance.install }
 
     before { reload_tmp }
@@ -17,13 +17,29 @@ RSpec.describe Tapy::Recipe do
       it 'install the repository' do
         install
 
-        # TODO: verify if installtion ocurred
+        # TODO: Verify if installation occurred
       end
     end
 
     context 'when repository doesnt exist' do
       it 'raises a error' do
         expect { install }.to raise_error(Tapy::InstallError)
+      end
+    end
+  end
+
+  describe '#render' do
+    subject(:render) { instance.render(to: 'tmp/') }
+
+    let(:git_reference) { 'http://gitserver/tapy-docker.git' }
+
+    context 'when installed' do
+      before do
+        instance.install
+      end
+
+      it 'renders files' do
+        render
       end
     end
   end
