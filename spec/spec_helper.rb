@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'tapy'
 require 'byebug'
 
 require_relative 'support/helpers'
 require_relative 'support/any_line_order_string'
+
+require 'simplecov'
+SimpleCov.start
+
+require 'tapy'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
