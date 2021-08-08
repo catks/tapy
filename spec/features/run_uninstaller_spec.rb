@@ -29,6 +29,7 @@ RSpec.describe 'tapy install', type: :feature do
       it 'log steps' do
         tapy_uninstall
 
+        # TODO: Remove space in before the "Recipe in last line"
         expected_stderr_output = <<~DESC
           ======== http://gitserver/tapy-docker.git ========
 

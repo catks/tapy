@@ -7,7 +7,7 @@ require_relative '../lib/tapy'
 
 begin
   Dry::CLI.new(Tapy::CLI).call
-rescue Tapy::Error => e
+rescue Tapy::Error, Tapy::UninstallError => e
   Tapy.events.publish('tapy.error', error: e)
-  abort
+  exit(false)
 end
